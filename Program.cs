@@ -15,11 +15,16 @@ class TestScene() : IScene
         {
             for (int y = 0; y < buffer.GetLength(1); y++)
             {
-                buffer[x, y] = ' ';
+                if (x == _playerPosition.X && y == _playerPosition.Y)
+                {
+                    buffer[x, y] = '☺';
+                }
+                else
+                {
+                    buffer[x, y] = ' ';
+                }
             }
         }
-
-        buffer[_playerPosition.X, _playerPosition.Y] = '@';
     }
 
     public void OnKeyPressed(ConsoleKey key)
