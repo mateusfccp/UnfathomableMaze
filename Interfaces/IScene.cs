@@ -1,3 +1,5 @@
+using UnfathomableMaze.Services;
+
 namespace UnfathomableMaze.Interfaces;
 
 /// <summary>
@@ -8,8 +10,8 @@ public interface IScene
     /// <summary>
     /// Draws the scene to the screen.
     /// </summary>
-    /// <param name="buffer">The buffer to draw onto.</param>
-    void Draw(Char[,] buffer);
+    /// <param name="canvas">A canvas to draw onto.</param>
+    void Draw(GameEngine.Canvas canvas);
 
     /// <summary>
     /// Called when a key is pressed.

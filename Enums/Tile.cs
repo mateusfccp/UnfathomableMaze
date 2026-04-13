@@ -1,4 +1,4 @@
-namespace UnfathomableMaze.Models;
+namespace UnfathomableMaze.Enums;
 
 /// <summary>
 ///  A tile in the maze.
@@ -15,7 +15,7 @@ public enum Tile
     Wall,
 
     /// <summary>
-    ///  A path tile.
+    /// A path tile.
     ///
     /// It is a free space that can be walked through.
     /// </summary>

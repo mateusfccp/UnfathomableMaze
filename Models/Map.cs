@@ -1,3 +1,4 @@
+using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 
 namespace UnfathomableMaze.Models;
