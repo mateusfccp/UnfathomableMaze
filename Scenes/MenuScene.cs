@@ -1,4 +1,3 @@
-using System.Drawing;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Models;
@@ -12,11 +11,12 @@ namespace UnfathomableMaze.Scenes;
 public class MenuScene : IScene
 {
     private static readonly string Title = $"Unfathomable Maze{Environment.NewLine}  and the Table";
-    int _selectedOption = 0;
+    private int _selectedOption;
 
-    private static readonly List<String> Options =
+    private static readonly List<string> Options =
     [
-        "Laberinto",
+        "Laberinto (fácil)",
+        "Laberinto (duro)",
         "Tabla",
     ];
 
@@ -26,16 +26,16 @@ public class MenuScene : IScene
 
         canvas.Draw(Title, (canvas.Width - "Unfathomable Maze".Length) / 2, 1);
 
-        int maxWidth = Options.Max(item => item.Length);
-        int startX = (canvas.Width - maxWidth) / 2;
-        int startY = (canvas.Height - Options.Count) / 2;
+        var maxWidth = Options.Max(item => item.Length);
+        var startX = (canvas.Width - maxWidth) / 2;
+        var startY = (canvas.Height - Options.Count) / 2;
 
-        canvas.Draw($"┌{new String('─', maxWidth)}┐", startX - 1, startY - 1);
+        canvas.Draw($"┌{new string('─', maxWidth)}┐", startX - 1, startY - 1);
 
-        for (int i = 0; i < Options.Count; i++)
+        for (var i = 0; i < Options.Count; i++)
         {
-            int x = startX + maxWidth / 2 - Options[i].Length / 2;
-            int y = startY + i;
+            var x = startX + maxWidth / 2 - Options[i].Length / 2;
+            var y = startY + i;
 
             canvas.Draw("│", startX - 1, y);
             canvas.Draw("│", startX + maxWidth, y);
@@ -43,7 +43,7 @@ public class MenuScene : IScene
                 i == _selectedOption ? new Style(decoration: Decoration.Invert) : new Style());
         }
 
-        canvas.Draw($"└{new String('─', maxWidth)}┘", startX - 1, startY + Options.Count);
+        canvas.Draw($"└{new string('─', maxWidth)}┘", startX - 1, startY + Options.Count);
     }
 
     public void OnKeyPressed(ConsoleKey key)

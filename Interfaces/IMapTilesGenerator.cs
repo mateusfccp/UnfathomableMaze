@@ -1,10 +1,9 @@
 using UnfathomableMaze.Enums;
-using UnfathomableMaze.Models;
 
 namespace UnfathomableMaze.Interfaces;
 
 /// <summary>
-///  A generator for a map of tiles.
+/// A generator for a map of tiles.
 /// </summary>
 public interface IMapTilesGenerator
 {

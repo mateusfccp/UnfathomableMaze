@@ -3,7 +3,7 @@ using UnfathomableMaze.Enums;
 
 namespace UnfathomableMaze.Models;
 
-public struct Style : IEquatable<Style>
+public readonly struct Style : IEquatable<Style>
 {
     /// <summary>
     /// The foreground color of the style.
@@ -47,5 +47,15 @@ public struct Style : IEquatable<Style>
     public override int GetHashCode()
     {
         return HashCode.Combine(ForegroundColor, BackgroundColor, (int)Decoration);
+    }
+
+    public static bool operator ==(Style left, Style right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Style left, Style right)
+    {
+        return !(left == right);
     }
 }

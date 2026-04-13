@@ -1,7 +1,7 @@
 namespace UnfathomableMaze.Enums;
 
 /// <summary>
-///  A tile in the maze.
+/// A tile in the maze.
 ///
 /// Can be either a wall or a path.
 /// </summary>

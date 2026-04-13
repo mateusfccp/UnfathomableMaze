@@ -1,5 +1,3 @@
-using System.Drawing; // Assuming you are using this for the Color struct
-using System.Collections.Generic;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Models;
 
@@ -13,7 +11,7 @@ public static class Ansi
     /// <summary>
     /// Resets all formatting back to the terminal's default.
     /// </summary>
-    public const string Reset = "\x1b[0m";
+    public const string Reset = "\e[0m";
 
     /// <summary>
     /// Moves the cursor to the specified X and Y coordinates.
@@ -23,7 +21,7 @@ public static class Ansi
     {
         // Add 1 because arrays are 0-indexed but ANSI is 1-indexed.
         // Y is rows, X is columns.
-        return $"\x1b[{y + 1};{x + 1}H";
+        return $"\e[{y + 1};{x + 1}H";
     }
 
     /// <summary>
@@ -45,16 +43,16 @@ public static class Ansi
 
         if (style.ForegroundColor.HasValue)
         {
-            Color fg = style.ForegroundColor.Value;
-            codes.Add($"38;2;{fg.R};{fg.G};{fg.B}");
+            var foregroundColor = style.ForegroundColor.Value;
+            codes.Add($"38;2;{foregroundColor.R};{foregroundColor.G};{foregroundColor.B}");
         }
 
         if (style.BackgroundColor.HasValue)
         {
-            Color bg = style.BackgroundColor.Value;
-            codes.Add($"48;2;{bg.R};{bg.G};{bg.B}");
+            var backgroundColor = style.BackgroundColor.Value;
+            codes.Add($"48;2;{backgroundColor.R};{backgroundColor.G};{backgroundColor.B}");
         }
 
-        return $"\x1b[{string.Join(";", codes)}m";
+        return $"\e[{string.Join(";", codes)}m";
     }
 }

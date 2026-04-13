@@ -1,5 +1,4 @@
 using System.Text;
-using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Models;
 
@@ -11,7 +10,7 @@ public class GameEngine
     private int _height = Console.WindowHeight;
     private Cell[,] _currentBuffer;
     private Cell[,] _nextBuffer;
-    private IScene _scene;
+    private readonly IScene _scene;
 
     public GameEngine(IScene initialScene)
     {
@@ -35,8 +34,10 @@ public class GameEngine
         while (true)
         {
             PollConsoleSize();
-            Canvas canvas = new Canvas(_width, _height);
-            ConsoleKey key = ProcessInput();
+            var canvas = new Canvas(_width, _height);
+            var key = ProcessInput();
+
+            if (key == ConsoleKey.Escape) return;
 
             _scene.OnKeyPressed(key);
             _scene.Draw(canvas);
@@ -57,7 +58,7 @@ public class GameEngine
         }
     }
 
-    private ConsoleKey ProcessInput()
+    private static ConsoleKey ProcessInput()
     {
         if (Console.KeyAvailable)
         {
@@ -71,28 +72,27 @@ public class GameEngine
 
     private void DrawBuffer()
     {
-        StringBuilder framePayload = new StringBuilder();
+        var framePayload = new StringBuilder();
         Style? activeStyle = null;
 
-        for (int y = 0; y < _currentBuffer.GetLength(1); y++)
+        for (var y = 0; y < _currentBuffer.GetLength(1); y++)
         {
-            for (int x = 0; x < _currentBuffer.GetLength(0); x++)
+            for (var x = 0; x < _currentBuffer.GetLength(0); x++)
             {
-                if (_currentBuffer[x, y] != _nextBuffer[x, y])
+                if (_currentBuffer[x, y] == _nextBuffer[x, y]) continue;
+
+                var targetCell = _nextBuffer[x, y];
+                _currentBuffer[x, y] = targetCell;
+
+                framePayload.Append(Ansi.MoveTo(x, y));
+
+                if (activeStyle == null || activeStyle.Value != targetCell.Style)
                 {
-                    Cell targetCell = _nextBuffer[x, y];
-                    _currentBuffer[x, y] = targetCell;
-
-                    framePayload.Append(Ansi.MoveTo(x, y));
-
-                    if (activeStyle == null || !activeStyle.Value.Equals(targetCell.Style))
-                    {
-                        framePayload.Append(Ansi.GetStyleSequence(targetCell.Style));
-                        activeStyle = targetCell.Style;
-                    }
-
-                    framePayload.Append(targetCell.Character);
+                    framePayload.Append(Ansi.GetStyleSequence(targetCell.Style));
+                    activeStyle = targetCell.Style;
                 }
+
+                framePayload.Append(targetCell.Character);
             }
         }
 
@@ -126,9 +126,9 @@ public class GameEngine
         /// </summary>
         public void Clear()
         {
-            for (int x = 0; x < Buffer.GetLength(0); x++)
+            for (var x = 0; x < Buffer.GetLength(0); x++)
             {
-                for (int y = 0; y < Buffer.GetLength(1); y++)
+                for (var y = 0; y < Buffer.GetLength(1); y++)
                 {
                     Buffer[x, y] = Cell.Empty;
                 }
@@ -144,10 +144,10 @@ public class GameEngine
         /// <param name="style">An optional style to be used in the content.</param>
         public void Draw(string content, int x, int y, Style style = new())
         {
-            int currentX = x;
-            int currentY = y;
+            var currentX = x;
+            var currentY = y;
 
-            for (int i = 0; i < content.Length; i++)
+            for (var i = 0; i < content.Length; i++)
             {
                 currentX++;
                 if (content[i] == Environment.NewLine[0])
