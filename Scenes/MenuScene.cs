@@ -11,18 +11,20 @@ namespace UnfathomableMaze.Scenes;
 /// </summary>
 public class MenuScene : IScene
 {
+    private static readonly string Title = $"Unfathomable Maze{Environment.NewLine}  and the Table";
     int _selectedOption = 0;
 
     private static readonly List<String> Options =
     [
-        "Item 1",
-        "N",
-        "Item 3000000000"
+        "Laberinto",
+        "Tabla",
     ];
 
     public void Draw(GameEngine.Canvas canvas)
     {
         canvas.Clear();
+
+        canvas.Draw(Title, (canvas.Width - "Unfathomable Maze".Length) / 2, 1);
 
         int maxWidth = Options.Max(item => item.Length);
         int startX = (canvas.Width - maxWidth) / 2;

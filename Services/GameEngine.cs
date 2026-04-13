@@ -142,11 +142,24 @@ public class GameEngine
         /// <param name="x">The X position of the content.</param>
         /// <param name="y">The Y position of the content.</param>
         /// <param name="style">An optional style to be used in the content.</param>
-        public void Draw(string content, int x, int y, Style style = new Style())
+        public void Draw(string content, int x, int y, Style style = new())
         {
+            int currentX = x;
+            int currentY = y;
+
             for (int i = 0; i < content.Length; i++)
             {
-                Buffer[x + i, y] = new Cell(content[i], style);
+                currentX++;
+                if (content[i] == Environment.NewLine[0])
+                {
+                    currentY++;
+                    currentX = x;
+                    i = i + Environment.NewLine.Length - 1;
+                }
+                else
+                {
+                    Buffer[currentX, currentY] = new Cell(content[i], style);
+                }
             }
         }
 
