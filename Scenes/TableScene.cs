@@ -29,11 +29,16 @@ public class TableScene : IScene
         var startX = (canvas.Width - _tableDimention.Width) / 2;
         var startY = (canvas.Height - _tableDimention.Height) / 2;
 
-        canvas.Draw($"┌{new string('─', _tableDimention.Width-2)}┐", startX - 1, startY - 1);
-        canvas.Draw("│",startX-1,startY);
-        canvas.Draw("TO-DO",startX+(_tableDimention.Width/2-"TO-DO".Length),startY);
-        canvas.Draw("│",startX+_tableDimention.Width-2,startY);
-        canvas.Draw($"└{new string('─', _tableDimention.Width-2)}┘", startX - 1, startY+1);
+        canvas.Draw("┌",startX-1,startY-1);
+
+        for(int i=0;i<_dataTable.GetLength(1); i++)
+        {
+            for(int j=0; j < _columnMaxLengths[i]+_padding; j++)
+            {
+                canvas.Draw("─",startX+j,startY-1);     
+            }
+            canvas.Draw("┬",startX+_columnMaxLengths[i]+_padding,startY-1);
+        }
         
     }
 
@@ -46,7 +51,7 @@ public class TableScene : IScene
         }
     }
 
-private int[] findColumnWidths(string[,] dataTable)
+    private int[] findColumnWidths(string[,] dataTable)
     {
         int[] columnWidths= new int[dataTable.GetLength(1)];
         try
@@ -85,7 +90,7 @@ private int[] findColumnWidths(string[,] dataTable)
 
         return new Size(widthTable,heightTable);
     }
-private string[,] LoadDataTable()
+    private string[,] LoadDataTable()
     {
         string[,] dataTable = new string[3, 4]
         {

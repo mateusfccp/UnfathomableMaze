@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|c:\\ejercicios_isi_prog1\\tp1\\unfathomablemaze\\interfaces\\imaptilesgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|solutionrelative:interfaces\\imaptilesgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|c:\\ejercicios_isi_prog1\\tp1\\unfathomablemaze\\interfaces\\iscene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|solutionrelative:interfaces\\iscene.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|c:\\ejercicios_isi_prog1\\tp1\\unfathomablemaze\\enums\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|solutionrelative:enums\\tile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|c:\\ejercicios_isi_prog1\\tp1\\unfathomablemaze\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9321892-2162-4818-A7B3-2E79A2D2F064}|UnfathomableMaze.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -18,33 +30,68 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IScene.cs",
+              "DocumentMoniker": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Interfaces\\IScene.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IScene.cs",
+              "ToolTip": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Interfaces\\IScene.cs",
+              "RelativeToolTip": "Interfaces\\IScene.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T21:01:24.224Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "IMapTilesGenerator.cs",
+              "DocumentMoniker": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Interfaces\\IMapTilesGenerator.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IMapTilesGenerator.cs",
+              "ToolTip": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Interfaces\\IMapTilesGenerator.cs",
+              "RelativeToolTip": "Interfaces\\IMapTilesGenerator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T21:00:59.515Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Tile.cs",
+              "DocumentMoniker": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Enums\\Tile.cs",
+              "RelativeDocumentMoniker": "Enums\\Tile.cs",
+              "ToolTip": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Enums\\Tile.cs",
+              "RelativeToolTip": "Enums\\Tile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-12T21:00:49.098Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-12T20:59:06.398Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-12T20:59:06.398Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UnfathomableMaze",
+              "DocumentIndex": 4,
+              "Title": "UnfathomableMaze.csproj",
               "DocumentMoniker": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\UnfathomableMaze.csproj",
               "RelativeDocumentMoniker": "UnfathomableMaze.csproj",
               "ToolTip": "C:\\EJERCICIOS_ISI_PROG1\\TP1\\UnfathomableMaze\\UnfathomableMaze.csproj",
               "RelativeToolTip": "UnfathomableMaze.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-12T20:59:00.477Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-12T20:59:00.477Z"
             }
           ]
         }
