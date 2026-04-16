@@ -12,7 +12,7 @@ public class TableScene : IScene
 {
     private string[,] _dataTable;
     private readonly int[] _columnMaxLengths;
-    private readonly int _padding = 2;
+    private readonly int _padding = 1;
     private readonly Size _tableDimention;
 
     public TableScene()
@@ -22,26 +22,83 @@ public class TableScene : IScene
         _tableDimention = findTableDimentions(_dataTable);
     }
 
-    void IScene.Draw(GameEngine.Canvas canvas)
+    public void Draw(GameEngine.Canvas canvas)
+{
+    canvas.Clear();
+
+    var startX = (canvas.Width - _tableDimention.Width) / 2;
+    var startY = (canvas.Height - _tableDimention.Height) / 2;
+
+    // 1. Dibujar Borde Superior del Encabezado
+    canvas.Draw("┌", startX - 1, startY - 1);
+    int currentX = startX;
+    for (int i = 0; i < _dataTable.GetLength(1); i++)
     {
-        canvas.Clear();
+        int colWidth = _columnMaxLengths[i] + (_padding * 2);
+        canvas.Draw(new string('─', colWidth), currentX, startY - 1);
+        currentX += colWidth;
+        if (i < _dataTable.GetLength(1) - 1)
+            canvas.Draw("┬", currentX, startY - 1);
+        currentX++; 
+    }
+    canvas.Draw("┐", currentX - 1, startY - 1);
 
-        var startX = (canvas.Width - _tableDimention.Width) / 2;
-        var startY = (canvas.Height - _tableDimention.Height) / 2;
+    // 2. Dibujar Contenido de las Filas
+    for (int f = 0; f < _dataTable.GetLength(0); f++)
+    {
+        int y = startY + f;
+        // Si no es la primera fila (títulos), movemos el contenido hacia abajo 
+        // para dejar espacio a la línea divisora del encabezado
+        if (f > 0) y++; 
 
-        canvas.Draw("┌",startX-1,startY-1);
-
-        for(int i=0;i<_dataTable.GetLength(1); i++)
+        currentX = startX - 1;
+        for (int c = 0; c < _dataTable.GetLength(1); c++)
         {
-            for(int j=0; j < _columnMaxLengths[i]+_padding; j++)
-            {
-                canvas.Draw("─",startX+j,startY-1);     
-            }
-            canvas.Draw("┬",startX+_columnMaxLengths[i]+_padding,startY-1);
+            // Dibujar pared lateral izquierda de la celda
+            canvas.Draw("│", currentX, y);
+            
+            // Dibujar el texto centrado o con padding
+            canvas.Draw(_dataTable[f, c], currentX + 1 + _padding, y);
+
+            currentX += _columnMaxLengths[c] + (_padding * 2) + 1;
         }
-        
+        // Dibujar pared lateral final derecha
+        canvas.Draw("│", currentX, y);
+
+        // 3. Dibujar Línea Divisora (Solo debajo de los títulos)
+        if (f == 0)
+        {
+            int sepY = startY + 1;
+            canvas.Draw("├", startX - 1, sepY);
+            int lineX = startX;
+            for (int i = 0; i < _dataTable.GetLength(1); i++)
+            {
+                int colWidth = _columnMaxLengths[i] + (_padding * 2);
+                canvas.Draw(new string('─', colWidth), lineX, sepY);
+                lineX += colWidth;
+                if (i < _dataTable.GetLength(1) - 1)
+                    canvas.Draw("┼", lineX, sepY);
+                lineX++;
+            }
+            canvas.Draw("┤", lineX - 1, sepY);
+        }
     }
 
+    // 4. Borde Inferior Final (Cierra la tabla abajo del todo)
+    int lastY = startY + _dataTable.GetLength(0) + 1;
+    canvas.Draw("└", startX - 1, lastY);
+    int footerX = startX;
+    for (int i = 0; i < _dataTable.GetLength(1); i++)
+    {
+        int colWidth = _columnMaxLengths[i] + (_padding * 2);
+        canvas.Draw(new string('─', colWidth), footerX, lastY);
+        footerX += colWidth;
+        if (i < _dataTable.GetLength(1) - 1)
+            canvas.Draw("┴", footerX, lastY);
+        footerX++;
+    }
+    canvas.Draw("┘", footerX - 1, lastY);
+}
     void IScene.OnKeyPressed(ConsoleKey key)
     {
         switch (key)
@@ -85,21 +142,32 @@ public class TableScene : IScene
 
         for(int i = 0; i < _columnMaxLengths.Length; i++)
         {
-            widthTable = widthTable + _columnMaxLengths[i] + _padding;            
+            widthTable = widthTable + _columnMaxLengths[i] + (_padding*2);            
         }   
 
         return new Size(widthTable,heightTable);
     }
-    private string[,] LoadDataTable()
+   private string[,] LoadDataTable()
+{
+    string[,] dataTable = new string[12, 6]
     {
-        string[,] dataTable = new string[3, 4]
-        {
-            { "Name",   "Country",   "Age", "Occupation" },
-            { "Alice",  "USA",       "29", "Engineer"   },
-            { "Bruno",  "Argentina", "35", "Teacher"    }
-        };
-        return dataTable;
-    }
+        { "ProductID", "Name",       "Category",     "Price",   "Stock", "Supplier" },
+        { "P001",      "Laptop",     "Electronics",  "$1200",   "35",    "TechCorp" },
+        { "P002",      "Smartphone", "Electronics",  "$800",    "50",    "MobileMax" },
+        { "P003",      "Desk",       "Furniture",    "$150",    "20",    "FurniCo" },
+        { "P004",      "Chair",      "Furniture",    "$85",     "100",   "FurniCo" },
+        { "P005",      "Headphones", "Electronics",  "$60",     "200",   "SoundWave" },
+        { "P006",      "Backpack",   "Accessories",  "$45",     "75",    "CarryAll" },
+        { "P007",      "Shoes",      "Clothing",     "$90",     "120",   "FashionHub" },
+        { "P008",      "Watch",      "Accessories",  "$250",    "40",    "TimeKeepers" },
+        { "P009",      "Tablet",     "Electronics",  "$500",    "60",    "TechCorp" },
+        { "P010",      "Lamp",       "Home Decor",   "$35",     "150",   "BrightHome" },
+        { "P011",      "Book",       "Stationery",   "$20",     "300",   "EduWorld" }
+    };
+    return dataTable;
+}
+
+
 
     private void testFindWidthFunction(GameEngine.Canvas canvas)
     {
