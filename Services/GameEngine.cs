@@ -156,7 +156,7 @@ public class GameEngine
                     currentX = x;
                     i = i + Environment.NewLine.Length - 1;
                 }
-                else
+                else if (currentX >= 0 || currentX < Width || currentY >= 0 || currentY < Height)
                 {
                     Buffer[currentX, currentY] = new Cell(content[i], style);
                 }
