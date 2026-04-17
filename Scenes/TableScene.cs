@@ -52,8 +52,8 @@ public class TableScene : IScene
     for (int i = 0; i < _dataTable.GetLength(1); i++)
     {
         int colWidth = _columnMaxLengths[i] + 2;
-        canvas.Draw(new string('─', colWidth), currentX, startY - 1);
-        currentX += colWidth;
+            canvas.Draw(new string('─', colWidth), currentX, startY - 1);
+            currentX += colWidth;
         if (i < _dataTable.GetLength(1) - 1)
             canvas.Draw("┬", currentX, startY - 1);
         currentX++; 
