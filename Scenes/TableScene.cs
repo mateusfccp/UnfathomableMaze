@@ -1,7 +1,6 @@
-using System.Diagnostics.Contracts;
 using System.Drawing;
-using Microsoft.VisualBasic;
 using UnfathomableMaze.Interfaces;
+using UnfathomableMaze.Models;
 using UnfathomableMaze.Services;
 
 namespace UnfathomableMaze.Scenes;
@@ -10,31 +9,49 @@ namespace UnfathomableMaze.Scenes;
 /// </summary>
 public class TableScene : IScene
 {
-    private string[,] _dataTable;
+    private static readonly string[,] _dataTable = new string[9, 6]
+    {
+        { "Language",   "Year", "Creator",          "Paradigm",          "Typing",      "Use Case" },
+        { "C",          "1972", "Dennis Ritchie",   "Procedural",        "Static",      "Systems Programming" },
+        { "Java",       "1995", "James Gosling",    "Object-Oriented",   "Static",      "Enterprise Apps" },
+        { "Python",     "1991", "Guido van Rossum", "Multi-Paradigm",    "Dynamic",     "Data Science, Web" },
+        { "JavaScript", "1995", "Brendan Eich",     "Event-Driven",      "Dynamic",     "Web Development" },
+        { "C#",         "2000", "Microsoft",        "Object-Oriented",   "Static",      "Desktop & Web Apps" },
+        { "Ruby",       "1995", "Yukihiro Matsumoto","Object-Oriented",  "Dynamic",     "Web Development" },
+        { "Go",         "2009", "Google",           "Concurrent",        "Static",      "Cloud & Networking" },
+        { "Rust",       "2010", "Mozilla",          "Systems + Safe",    "Static",      "Safe Systems Programming" }
+    };
     private readonly int[] _columnMaxLengths;
-    private readonly int _padding = 1;
     private readonly Size _tableDimention;
+
+    private readonly Style _titlesStyle = new Style(Color.Cyan, null ,Enums.Decoration.Bold );
 
     public TableScene()
     {
-        _dataTable = LoadDataTable();
-        _columnMaxLengths = findColumnWidths(_dataTable);
-        _tableDimention = findTableDimentions(_dataTable);
+        _columnMaxLengths = FindColumnWidths(_dataTable);
+        _tableDimention = FindTableDimentions(_dataTable);
     }
 
     public void Draw(GameEngine.Canvas canvas)
 {
     canvas.Clear();
-
+    //Validation
+    if(canvas.Width < _tableDimention.Width || canvas.Height < _tableDimention.Height)
+        {
+            Console.WriteLine($"Tamaño de pantalla insuficiente, intente nuevamente \n({_tableDimention.Width}x{_tableDimention.Height} de espacios requeridos)");
+            Console.WriteLine("Presione una tecla para volver....");
+            Console.ReadKey(true);
+            return;
+        }
     var startX = (canvas.Width - _tableDimention.Width) / 2;
     var startY = (canvas.Height - _tableDimention.Height) / 2;
 
-    // 1. Dibujar Borde Superior del Encabezado
+    //Top line
     canvas.Draw("┌", startX - 1, startY - 1);
     int currentX = startX;
     for (int i = 0; i < _dataTable.GetLength(1); i++)
     {
-        int colWidth = _columnMaxLengths[i] + (_padding * 2);
+        int colWidth = _columnMaxLengths[i] + 2;
         canvas.Draw(new string('─', colWidth), currentX, startY - 1);
         currentX += colWidth;
         if (i < _dataTable.GetLength(1) - 1)
@@ -58,9 +75,17 @@ public class TableScene : IScene
             canvas.Draw("│", currentX, y);
             
             // Dibujar el texto centrado o con padding
-            canvas.Draw(_dataTable[f, c], currentX + 1 + _padding, y);
+            if(f > 0)
+                {
+                    canvas.Draw(_dataTable[f, c], currentX + 2, y);                    
+                }
+                else
+                {
+                    canvas.Draw(_dataTable[f, c], currentX + 2, y,_titlesStyle);   
+                }
 
-            currentX += _columnMaxLengths[c] + (_padding * 2) + 1;
+
+            currentX += _columnMaxLengths[c] + 3;
         }
         // Dibujar pared lateral final derecha
         canvas.Draw("│", currentX, y);
@@ -73,7 +98,7 @@ public class TableScene : IScene
             int lineX = startX;
             for (int i = 0; i < _dataTable.GetLength(1); i++)
             {
-                int colWidth = _columnMaxLengths[i] + (_padding * 2);
+                int colWidth = _columnMaxLengths[i] + 2;
                 canvas.Draw(new string('─', colWidth), lineX, sepY);
                 lineX += colWidth;
                 if (i < _dataTable.GetLength(1) - 1)
@@ -90,7 +115,7 @@ public class TableScene : IScene
     int footerX = startX;
     for (int i = 0; i < _dataTable.GetLength(1); i++)
     {
-        int colWidth = _columnMaxLengths[i] + (_padding * 2);
+        int colWidth = _columnMaxLengths[i] + 2;
         canvas.Draw(new string('─', colWidth), footerX, lastY);
         footerX += colWidth;
         if (i < _dataTable.GetLength(1) - 1)
@@ -108,33 +133,25 @@ public class TableScene : IScene
         }
     }
 
-    private int[] findColumnWidths(string[,] dataTable)
+    private int[] FindColumnWidths(string[,] dataTable)
     {
         int[] columnWidths= new int[dataTable.GetLength(1)];
-        try
-        {
-                for(int i=0; i<dataTable.GetLength(1);i++)
-                {
+            for(int i=0; i<dataTable.GetLength(1);i++)
+            {
                 int tempLength = 0;
                 for (int j = 0; j < dataTable.GetLength(0); j++)
-                    {
+                {
                         if(dataTable[j,i].Length > tempLength)
                         {
                             tempLength = dataTable[j,i].Length;
                         }
-                    }
-                    columnWidths[i] = tempLength;
-                }            
-        }
-        catch(IndexOutOfRangeException e)
-        {
-            Console.WriteLine(e.Message);
-            Console.WriteLine("\nError al calcular los lengths más largos de la matriz");
-        }
+                }
+                columnWidths[i] = tempLength;
+            }        
         return columnWidths;
     }
 
-    private Size findTableDimentions(string[,] dataMatrix)
+    private Size FindTableDimentions(string[,] dataMatrix)
     {
         var heightTable = dataMatrix.GetLength(0)*2 +1;
         var linesToSeparateCells = dataMatrix.GetLength(1) + 1;
@@ -142,43 +159,10 @@ public class TableScene : IScene
 
         for(int i = 0; i < _columnMaxLengths.Length; i++)
         {
-            widthTable = widthTable + _columnMaxLengths[i] + (_padding*2);            
+            widthTable = widthTable + _columnMaxLengths[i] + 2;            
         }   
 
         return new Size(widthTable,heightTable);
     }
-   private string[,] LoadDataTable()
-{
-    string[,] dataTable = new string[12, 6]
-    {
-        { "ProductID", "Name",       "Category",     "Price",   "Stock", "Supplier" },
-        { "P001",      "Laptop",     "Electronics",  "$1200",   "35",    "TechCorp" },
-        { "P002",      "Smartphone", "Electronics",  "$800",    "50",    "MobileMax" },
-        { "P003",      "Desk",       "Furniture",    "$150",    "20",    "FurniCo" },
-        { "P004",      "Chair",      "Furniture",    "$85",     "100",   "FurniCo" },
-        { "P005",      "Headphones", "Electronics",  "$60",     "200",   "SoundWave" },
-        { "P006",      "Backpack",   "Accessories",  "$45",     "75",    "CarryAll" },
-        { "P007",      "Shoes",      "Clothing",     "$90",     "120",   "FashionHub" },
-        { "P008",      "Watch",      "Accessories",  "$250",    "40",    "TimeKeepers" },
-        { "P009",      "Tablet",     "Electronics",  "$500",    "60",    "TechCorp" },
-        { "P010",      "Lamp",       "Home Decor",   "$35",     "150",   "BrightHome" },
-        { "P011",      "Book",       "Stationery",   "$20",     "300",   "EduWorld" }
-    };
-    return dataTable;
-}
 
-
-
-    private void testFindWidthFunction(GameEngine.Canvas canvas)
-    {
-        //var startX = 0;
-        var startY = 0;
-
-        for(int i =0; i < _dataTable.GetLength(1); i++)
-        {
-            var y = startY + i;
-            var x = 0;
-            canvas.Draw($"Column {i+1} : {_columnMaxLengths[i]}",x,y);
-        }
-    }
 }
