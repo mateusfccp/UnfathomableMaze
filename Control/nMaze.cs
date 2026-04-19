@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnfathomableMaze.Interfaces;
@@ -8,28 +8,29 @@ namespace UnfathomableMaze.Control
 {
     public class nMaze
     {
-        private Tile[,] mapTiles;
+        public Tile[,] TileMap { get; } // We use this getter in the MazeScene as the map to validate walls and player interation
         public nMaze(IMapTilesGenerator mapTilesGenerator)
         {
-            mapTiles = mapTilesGenerator.Generate();
+            TileMap = mapTilesGenerator.Generate();
         }
 
+        // Tile Matrix -> Char Matrix
         public char[,] ConvertMap()
         {
-            int width = mapTiles.GetLength(0);
-            int height = mapTiles.GetLength(1);
+            int width = TileMap.GetLength(0);
+            int height = TileMap.GetLength(1);
             char[,] charMap = new char[width, height];
 
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    if (mapTiles[i, j] == Tile.Wall)
-                    { 
-                        bool north = ValidateNorth(mapTiles, i, j);
-                        bool south = ValidateSouth(mapTiles, i, j);
-                        bool west = ValidateWest(mapTiles, i, j);
-                        bool east = ValidateEast(mapTiles, i, j);
+                    if (TileMap[i, j] == Tile.Wall)
+                    {
+                        bool north = ValidateNorth(TileMap, i, j);
+                        bool south = ValidateSouth(TileMap, i, j);
+                        bool west = ValidateWest(TileMap, i, j);
+                        bool east = ValidateEast(TileMap, i, j);
 
                         // Corners
                         if (south && east && !north && !west) charMap[i, j] = '┌';
@@ -59,41 +60,45 @@ namespace UnfathomableMaze.Control
             return charMap;
         }
 
-        public static bool ValidateNorth(Tile[,] map, int posX, int posY)
+        // Wall validation
+        public bool ValidateNorth(Tile[,] map, int y, int x)
         {
-            if (posX > 0)
+            if (y > 0)
             {
-                if (map[posX - 1, posY] == Tile.Wall) return true;
+                if (map[y - 1, x] == Tile.Wall) return true;
                 else return false;
             }
             else return false;
         }
 
-        public static bool ValidateEast(Tile[,] map, int posX, int posY)
+        // Wall validation
+        public bool ValidateEast(Tile[,] map, int y, int x)
         {
-            if (posY < map.GetLength(1) - 1)
+            if (x < map.GetLength(1) - 1)
             {
-                if (map[posX, posY + 1] == Tile.Wall) return true;
+                if (map[y, x + 1] == Tile.Wall) return true;
                 else return false;
             }
             else return false;
         }
 
-        public static bool ValidateSouth(Tile[,] map, int posX, int posY)
+        // Wall validation
+        public bool ValidateSouth(Tile[,] map, int y, int x)
         {
-            if (posX < map.GetLength(0) - 1)
+            if (y < map.GetLength(0) - 1)
             {
-                if (map[posX + 1, posY] == Tile.Wall) return true;
+                if (map[y + 1, x] == Tile.Wall) return true;
                 else return false;
             }
             else return false;
         }
 
-        public static bool ValidateWest(Tile[,] map, int posX, int posY)
+        // Wall validation
+        public bool ValidateWest(Tile[,] map, int y, int x)
         {
-            if (posY > 0)
+            if (x > 0)
             {
-                if (map[posX, posY - 1] == Tile.Wall) return true;
+                if (map[y, x - 1] == Tile.Wall) return true;
                 else return false;
             }
             else return false;
