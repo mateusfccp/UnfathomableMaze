@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 using UnfathomableMaze.Control;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Services;
-using static UnfathomableMaze.Services.GameEngine;
 
 namespace UnfathomableMaze.Scenes
 {
@@ -23,7 +19,7 @@ namespace UnfathomableMaze.Scenes
             player = new Point(1, 1);
         }
 
-        public void Draw(GameEngine.Canvas canvas)
+        public void Draw(Engine.Canvas canvas)
         {
             canvas.Clear();
 
