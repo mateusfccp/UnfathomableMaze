@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Models;
@@ -18,9 +19,15 @@ public class MenuScene : IScene
         "Laberinto (fácil)",
         "Laberinto (duro)",
         "Tabla",
+        "Salir"
     ];
 
-    public void Draw(GameEngine.Canvas canvas)
+    public MenuScene(int initialOption = 0)
+    {
+        _selectedOption = initialOption;
+    }
+
+    public void Draw(Engine.Canvas canvas)
     {
         canvas.Clear();
 
@@ -57,7 +64,29 @@ public class MenuScene : IScene
                 _selectedOption = (_selectedOption + 1) % Options.Count;
                 break;
             case ConsoleKey.Enter:
-                // TODO: Implement functionality based on selected option.
+                IScene? newScene = null;
+
+                switch (_selectedOption)
+                {
+                    case 0:
+                        // TODO(mathy-schneider): replace with maze scene (easy)
+                        newScene = new TableScene();
+                        break;
+                    case 1:
+                        // TODO(mathy-schneider): replace with maze scene (hard)
+                        newScene = new TableScene();
+                        break;
+                    case 2:
+                        newScene = new TableScene();
+                        break;
+                    case 3:
+                        Engine.Instance?.Stop();
+                        return;
+                }
+
+                Debug.Assert(newScene != null, "Invalid option selected.");
+
+                Engine.Instance?.UpdateScene(newScene);
                 break;
         }
     }

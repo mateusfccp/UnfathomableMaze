@@ -4,15 +4,32 @@ using UnfathomableMaze.Models;
 
 namespace UnfathomableMaze.Services;
 
-public class GameEngine
+/// <summary>
+/// A basic engine that can be used to draw to the console and process user input.
+/// <br />
+/// After creating a new instance of this class, call <see cref="Start"/> when you are ready to start the engine.
+/// </summary>
+public class Engine
 {
     private int _width = Console.WindowWidth;
     private int _height = Console.WindowHeight;
+    private bool _isRunning;
     private Cell[,] _currentBuffer;
     private Cell[,] _nextBuffer;
-    private readonly IScene _scene;
+    private IScene _scene;
 
-    public GameEngine(IScene initialScene)
+    /// <summary>
+    /// The current instance of the engine.
+    /// <br />
+    /// This is null if the engine is not running.
+    /// </summary>
+    public static Engine? Instance { get; private set; }
+
+    /// <summary>
+    /// Creates a new engine with the given initial scene.
+    /// </summary>
+    /// <param name="initialScene">The screen with which the engine initializes.</param>
+    public Engine(IScene initialScene)
     {
         _currentBuffer = new Cell[_width, _height];
         _nextBuffer = new Cell[_width, _height];
@@ -20,24 +37,56 @@ public class GameEngine
     }
 
     /// <summary>
-    /// Starts the game engine.
+    /// Starts the engine.
     /// </summary>
     public void Start()
     {
+        if (Instance != null)
+            throw new InvalidOperationException(
+                $"""
+                 {nameof(Engine)} has already been started. Dispose of the existing instance before starting a new one."
+                 """);
+
+        _isRunning = true;
         Console.CursorVisible = false;
+        Instance = this;
         Loop();
+        Instance = null;
         Console.CursorVisible = true;
+    }
+
+    /// <summary>
+    /// Stops the engine.
+    /// <br />
+    /// When the engine stops, it will dispose of the current scene and other resources used by the engine.
+    /// </summary>
+    public void Stop()
+    {
+        _scene.Dispose();
+        _isRunning = false;
+    }
+
+    /// <summary>
+    /// Sets the current scene to the given scene.
+    /// <br />
+    /// The old scene will be disposed of by calling <see cref="IScene.Dispose"/> before the new scene is set.
+    /// </summary>
+    /// <param name="newScene"></param>
+    public void UpdateScene(IScene newScene)
+    {
+        _scene.Dispose();
+        _scene = newScene;
     }
 
     private void Loop()
     {
-        while (true)
+        while (_isRunning)
         {
             PollConsoleSize();
             var canvas = new Canvas(_width, _height);
             var key = ProcessInput();
 
-            if (key == ConsoleKey.Escape) return;
+            if (key == ConsoleKey.Escape) Stop();
 
             _scene.OnKeyPressed(key);
             _scene.Draw(canvas);
@@ -180,7 +229,7 @@ public class GameEngine
     }
 
     /// <summary>
-    ///  Represents a cell in the game.
+    ///  Represents a cell in the console.
     /// </summary>
     /// <param name="character">The character in the cell.</param>
     /// <param name="style">The style of the cell.</param>

@@ -34,7 +34,7 @@ public class TableScene : IScene
         _tableDimention = FindTableDimentions(DataTable);
     }
 
-    public void Draw(GameEngine.Canvas canvas)
+    public void Draw(Engine.Canvas canvas)
     {
         canvas.Clear();
         //Validation
@@ -138,7 +138,9 @@ public class TableScene : IScene
         switch (key)
         {
             case ConsoleKey.Backspace:
-                return;
+            case ConsoleKey.Escape:
+                Engine.Instance?.UpdateScene(new MenuScene(2));
+                break;
         }
     }
 
