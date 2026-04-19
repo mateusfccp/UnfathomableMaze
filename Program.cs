@@ -2,6 +2,6 @@
 using UnfathomableMaze.Services;
 
 
-var scene = new TableScene();
-var engine = new GameEngine(scene);
+var scene = new MenuScene();
+var engine = new Engine(scene);
 engine.Start();
