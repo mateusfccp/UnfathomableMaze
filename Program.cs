@@ -1,4 +1,4 @@
-﻿using UnfathomableMaze.Scenes;
+using UnfathomableMaze.Scenes;
 using UnfathomableMaze.Services;
 
 var scene = new MazeScene();
