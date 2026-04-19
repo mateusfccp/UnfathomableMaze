@@ -21,7 +21,7 @@ public class MapGenerator : IMapTilesGenerator
     private const int Height = 31;
 
     /// <summary>
-    /// DETAIL: The number 51 means that the maze is composed by 49 real tiles.
+    /// DETAIL: The number 31 means that the maze is composed by 29 real tiles.
     /// The borders of the matrix will always be walls. This leaves us with 2 tiles less for each axis.
     /// This means that if the player starts at position 1,1 (not 0,0 bc its wall) the finish point will be at index 49, 49.
     ///</summary>
