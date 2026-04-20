@@ -33,16 +33,6 @@ public class TableScene : IScene
     public void Draw(Engine.Canvas canvas)
     {
         canvas.Clear();
-        //Validation
-        if (canvas.Width < _tableDimention.Width || canvas.Height < _tableDimention.Height)
-        {
-            canvas.Clear();
-            canvas.Draw("Tamaño de pantalla insuficiente, intente nuevamente",0,0);
-            //canvas.Draw($"({_tableDimention.Width}x{_tableDimention.Height} de espacios requeridos)",0,1,_errorStyle);
-            Console.ReadKey(true);
-            Engine.Instance.UpdateScene(new MenuScene());
-        }
-
         var startX = (canvas.Width - _tableDimention.Width) / 2;
         var startY = (canvas.Height - _tableDimention.Height) / 2;
 
