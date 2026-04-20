@@ -9,6 +9,7 @@ riderModule.iml
 *.userosscache
 *.sln.docstates
 .rider/
+.vs
 
 # ==========================================
 # Build outputs and compilation artifacts
