@@ -53,6 +53,7 @@ public class Engine
         Loop();
         Instance = null;
         Console.CursorVisible = true;
+        Console.Clear();
     }
 
     /// <summary>
