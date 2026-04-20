@@ -17,8 +17,8 @@ namespace UnfathomableMaze.Services;
 /// </summary>
 public class MapGenerator : IMapTilesGenerator
 {
-    private const int Width = 31; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
-    private const int Height = 31;
+    private int Width = 31; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
+    private int Height = 31;
 
     /// <summary>
     /// DETAIL: The number 31 means that the maze is composed by 29 real tiles.
@@ -26,6 +26,17 @@ public class MapGenerator : IMapTilesGenerator
     /// This means that if the player starts at position 1,1 (not 0,0 bc its wall) the finish point will be at index 49, 49.
     ///</summary>
     private readonly Random _random = new();
+
+    public MapGenerator() {
+        int rand1 = _random.Next(20, 50);
+        int rand2 = _random.Next(20, 50);
+
+        if (rand1 % 2 == 0) rand1++;
+        if (rand2 % 2 == 0) rand2++;
+
+        Width = rand1;
+        Height = rand2;
+    }
 
     public Tile[,] Generate() // Function that initializes and generates the maze
     {

@@ -22,7 +22,6 @@ namespace UnfathomableMaze.Scenes
             maze = new nMaze(mapGenerator);
             displayMap = maze.ConvertMap();
             player = new Point(1, 1);
-            finishFlag = new Point(29, 29);
             this.hardmode = hardmode;
             this.score = score;
             this.steps = steps;
@@ -54,6 +53,7 @@ namespace UnfathomableMaze.Scenes
             }
 
             // Finish Flag
+            finishFlag = new Point(displayMap.GetLength(1) - 2, displayMap.GetLength(0) - 2);
             canvas.Draw("⚿", canvas.Width / 2 - displayMap.GetLength(1) / 2 + finishFlag.X, canvas.Height / 2 - displayMap.GetLength(0) / 2 + finishFlag.Y, new Models.Style(Color.Gold));
 
             // Player
