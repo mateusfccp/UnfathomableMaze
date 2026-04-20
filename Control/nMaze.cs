@@ -5,7 +5,7 @@ namespace UnfathomableMaze.Control
 {
     public class nMaze
     {
-        private Tile[,] TileMap { get; } // We use this getter in the MazeScene as the map to validate walls and player interation
+        public Tile[,] TileMap { get; } // We use this getter in the MazeScene as the map to validate walls and player interation
         public nMaze(IMapTilesGenerator mapTilesGenerator)
         {
             TileMap = mapTilesGenerator.Generate();
