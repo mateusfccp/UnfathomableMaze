@@ -17,8 +17,8 @@ namespace UnfathomableMaze.Services;
 /// </summary>
 public class MapGenerator : IMapTilesGenerator
 {
-    private const int Width = 41; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
-    private const int Height = 41;
+    private int Width = 41; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
+    private int Height = 41;
 
     /// <summary>
     /// DETAIL: The number 31 means that the maze is composed by 29 real tiles.
