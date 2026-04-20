@@ -5,6 +5,7 @@ using UnfathomableMaze.Services;
 
 namespace UnfathomableMaze.Scenes
 {
+
     public class MazeScene : IScene
     {
         private MapGenerator mapGenerator = new MapGenerator();
@@ -25,8 +26,6 @@ namespace UnfathomableMaze.Scenes
             this.hardmode = hardmode;
             this.score = score;
             this.steps = steps;
-            
-            
         }
 
         public void Draw(Engine.Canvas canvas)
@@ -48,7 +47,7 @@ namespace UnfathomableMaze.Scenes
             {
                 for (int j = 0; j < displayMap.GetLength(1); j++)
                 {
-                    canvas.Draw(displayMap[i, j].ToString(), canvas.Width/2 - displayMap.GetLength(1)/2 + j, canvas.Height / 2 - displayMap.GetLength(0) / 2 + i);
+                    canvas.Draw(displayMap[i, j].ToString(), canvas.Width / 2 - displayMap.GetLength(1) / 2 + j, canvas.Height / 2 - displayMap.GetLength(0) / 2 + i);
                 }
             }
 
@@ -109,9 +108,10 @@ namespace UnfathomableMaze.Scenes
             if (death)
             {
                 IScene? newScene = null;
-                newScene = new DeathScene();    
+                newScene = new DeathScene();
                 Engine.Instance?.UpdateScene(newScene);
             }
         }
     }
 }
+
