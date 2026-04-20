@@ -69,12 +69,10 @@ public class MenuScene : IScene
                 switch (_selectedOption)
                 {
                     case 0:
-                        // TODO(mathy-schneider): replace with maze scene (easy)
-                        newScene = new TableScene();
+                        newScene = new MazeScene(false);
                         break;
                     case 1:
-                        // TODO(mathy-schneider): replace with maze scene (hard)
-                        newScene = new TableScene();
+                        newScene = new MazeScene(true);
                         break;
                     case 2:
                         newScene = new TableScene();

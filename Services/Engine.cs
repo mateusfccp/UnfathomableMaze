@@ -53,7 +53,6 @@ public class Engine
         Loop();
         Instance = null;
         Console.CursorVisible = true;
-        Console.Clear();
     }
 
     /// <summary>
@@ -86,8 +85,6 @@ public class Engine
             PollConsoleSize();
             var canvas = new Canvas(_width, _height);
             var key = ProcessInput();
-
-            if (key == ConsoleKey.Escape) Stop();
 
             _scene.OnKeyPressed(key);
             _scene.Draw(canvas);
@@ -206,7 +203,7 @@ public class Engine
                     currentX = x;
                     i = i + Environment.NewLine.Length - 1;
                 }
-                else if (currentX >= 0 || currentX < Width || currentY >= 0 || currentY < Height)
+                else if (currentX >= 0 && currentX < Width && currentY >= 0 && currentY < Height)
                 {
                     Buffer[currentX, currentY] = new Cell(content[i], style);
                 }
