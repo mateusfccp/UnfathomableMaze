@@ -17,8 +17,8 @@ namespace UnfathomableMaze.Services;
 /// </summary>
 public class MapGenerator : IMapTilesGenerator
 {
-    private int Width = 31; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
-    private int Height = 31;
+    private const int Width = 41; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
+    private const int Height = 41;
 
     /// <summary>
     /// DETAIL: The number 31 means that the maze is composed by 29 real tiles.
@@ -53,10 +53,11 @@ public class MapGenerator : IMapTilesGenerator
         }
 
         var stack = new Stack<Point>(); // Stack of positions the "ant" carved into the maze
-        const int startX = 1; // Start position of the player in the maze
-        const int startY = 1; // Can be changed but MUST ALWAYS be composed by two odd numbers.
+        const int startX = 21; // Start position of the player in the maze
+        const int startY = 21; // Can be changed but MUST ALWAYS be composed by two odd numbers.
 
         map[startX, startY] = Tile.Path; // Start position is turned into a path and pushed into the stack
+
         stack.Push(new Point(startX, startY)); // This begins the "carving"
 
         while (stack.Count > 0)
@@ -83,6 +84,7 @@ public class MapGenerator : IMapTilesGenerator
                 stack.Pop(); // If no neighbors are left, the stack goes backwards and keeps checking for neighbors.
             }
         }
+        AddLoops(map, 0.02); // Turns the simple maze into a braid maze (adds loops)
 
         return map;
     }
@@ -106,5 +108,23 @@ public class MapGenerator : IMapTilesGenerator
             neighbors.Add(new Point(x, y + 2));
 
         return neighbors;
+    }
+    private void AddLoops(Tile[,] map, double probability)
+    {
+        for (int x = 1; x < Width - 1; x++)
+        {
+            for (int y = 1; y < Height - 1; y++)
+            {
+                if (map[x, y] == Tile.Wall)
+                {
+                    bool verticalColisions = (map[x, y - 1] == Tile.Path && map[x, y + 1] == Tile.Path);
+                    bool horizontalColisions = (map[x - 1, y] == Tile.Path && map[x + 1, y] == Tile.Path);
+                    if ((verticalColisions || horizontalColisions) && _random.NextDouble() < probability)
+                    {
+                        map[x, y] = Tile.Path;
+                    }
+                }
+            }
+        }
     }
 }
