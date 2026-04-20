@@ -78,7 +78,6 @@ public class MenuScene : IScene
                         newScene = new TableScene();
                         break;
                     case 3:
-                        Console.Clear();
                         Engine.Instance?.Stop();
                         return;
                 }

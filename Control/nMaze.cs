@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Enums;
 
@@ -8,7 +5,7 @@ namespace UnfathomableMaze.Control
 {
     public class nMaze
     {
-        public Tile[,] TileMap { get; } // We use this getter in the MazeScene as the map to validate walls and player interation
+        private Tile[,] TileMap { get; } // We use this getter in the MazeScene as the map to validate walls and player interation
         public nMaze(IMapTilesGenerator mapTilesGenerator)
         {
             TileMap = mapTilesGenerator.Generate();
