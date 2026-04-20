@@ -10,28 +10,24 @@ namespace UnfathomableMaze.Scenes;
 /// </summary>
 public class TableScene : IScene
 {
-    private static readonly string[,] DataTable = new[,]
+    private static readonly string[,] _dataTable = new string[4, 4]
     {
-        { "Language", "Year", "Creator", "Paradigm", "Typing", "Use Case" },
-        { "C", "1972", "Dennis Ritchie", "Procedural", "Static", "Systems Programming" },
-        { "Java", "1995", "James Gosling", "Object-Oriented", "Static", "Enterprise Apps" },
-        { "Python", "1991", "Guido van Rossum", "Multi-Paradigm", "Dynamic", "Data Science, Web" },
-        { "JavaScript", "1995", "Brendan Eich", "Event-Driven", "Dynamic", "Web Development" },
-        { "C#", "2000", "Microsoft", "Object-Oriented", "Static", "Desktop & Web Apps" },
-        { "Ruby", "1995", "Yukihiro Matsumoto", "Object-Oriented", "Dynamic", "Web Development" },
-        { "Go", "2009", "Google", "Concurrent", "Static", "Cloud & Networking" },
-        { "Rust", "2010", "Mozilla", "Systems + Safe", "Static", "Safe Systems Programming" }
+        { "Lenguaje",   "Año", "Creador",          "Paradigma" },
+        { "C",          "1972", "Dennis Ritchie",   "Procedural" },
+        { "Java",       "1995", "James Gosling",    "Orientado a Objetos" },
+        { "Python",     "1991", "Guido van Rossum", "Multiparadigma" }
     };
 
     private readonly int[] _columnMaxLengths;
     private readonly Size _tableDimention;
 
-    private readonly Style _titlesStyle = new Style(Color.Cyan, null, Enums.Decoration.Bold);
+    private readonly static Style _titlesStyle = new Style(Color.Cyan, null, Enums.Decoration.Bold);
+    private readonly static Style _errorStyle = new Style(Color.Red, null, Enums.Decoration.Bold);
 
     public TableScene()
     {
-        _columnMaxLengths = FindColumnWidths(DataTable);
-        _tableDimention = FindTableDimentions(DataTable);
+        _columnMaxLengths = FindColumnWidths(_dataTable);
+        _tableDimention = FindTableDimentions(_dataTable);
     }
 
     public void Draw(Engine.Canvas canvas)
@@ -40,11 +36,11 @@ public class TableScene : IScene
         //Validation
         if (canvas.Width < _tableDimention.Width || canvas.Height < _tableDimention.Height)
         {
-            Console.WriteLine(
-                $"Tamaño de pantalla insuficiente, intente nuevamente \n({_tableDimention.Width}x{_tableDimention.Height} de espacios requeridos)");
-            Console.WriteLine("Presione una tecla para volver....");
+            canvas.Clear();
+            canvas.Draw("Tamaño de pantalla insuficiente, intente nuevamente",0,0);
+            //canvas.Draw($"({_tableDimention.Width}x{_tableDimention.Height} de espacios requeridos)",0,1,_errorStyle);
             Console.ReadKey(true);
-            return;
+            Engine.Instance.UpdateScene(new MenuScene());
         }
 
         var startX = (canvas.Width - _tableDimention.Width) / 2;
@@ -53,12 +49,12 @@ public class TableScene : IScene
         //Top line
         canvas.Draw("┌", startX - 1, startY - 1);
         int currentX = startX;
-        for (int i = 0; i < DataTable.GetLength(1); i++)
+        for (int i = 0; i < _dataTable.GetLength(1); i++)
         {
             int colWidth = _columnMaxLengths[i] + 2;
             canvas.Draw(new string('─', colWidth), currentX, startY - 1);
             currentX += colWidth;
-            if (i < DataTable.GetLength(1) - 1)
+            if (i < _dataTable.GetLength(1) - 1)
                 canvas.Draw("┬", currentX, startY - 1);
             currentX++;
         }
@@ -66,7 +62,7 @@ public class TableScene : IScene
         canvas.Draw("┐", currentX - 1, startY - 1);
 
         // 2. Dibujar Contenido de las Filas
-        for (int f = 0; f < DataTable.GetLength(0); f++)
+        for (int f = 0; f < _dataTable.GetLength(0); f++)
         {
             int y = startY + f;
             // Si no es la primera fila (títulos), movemos el contenido hacia abajo 
@@ -74,7 +70,7 @@ public class TableScene : IScene
             if (f > 0) y++;
 
             currentX = startX - 1;
-            for (int c = 0; c < DataTable.GetLength(1); c++)
+            for (int c = 0; c < _dataTable.GetLength(1); c++)
             {
                 // Dibujar pared lateral izquierda de la celda
                 canvas.Draw("│", currentX, y);
@@ -82,11 +78,11 @@ public class TableScene : IScene
                 // Dibujar el texto centrado o con padding
                 if (f > 0)
                 {
-                    canvas.Draw(DataTable[f, c], currentX + 2, y);
+                    canvas.Draw(_dataTable[f, c], currentX + 2, y);
                 }
                 else
                 {
-                    canvas.Draw(DataTable[f, c], currentX + 2, y, _titlesStyle);
+                    canvas.Draw(_dataTable[f, c], currentX + 2, y, _titlesStyle);
                 }
 
 
@@ -102,12 +98,12 @@ public class TableScene : IScene
                 int sepY = startY + 1;
                 canvas.Draw("├", startX - 1, sepY);
                 int lineX = startX;
-                for (int i = 0; i < DataTable.GetLength(1); i++)
+                for (int i = 0; i < _dataTable.GetLength(1); i++)
                 {
                     int colWidth = _columnMaxLengths[i] + 2;
                     canvas.Draw(new string('─', colWidth), lineX, sepY);
                     lineX += colWidth;
-                    if (i < DataTable.GetLength(1) - 1)
+                    if (i < _dataTable.GetLength(1) - 1)
                         canvas.Draw("┼", lineX, sepY);
                     lineX++;
                 }
@@ -117,15 +113,15 @@ public class TableScene : IScene
         }
 
         // 4. Borde Inferior Final (Cierra la tabla abajo del todo)
-        int lastY = startY + DataTable.GetLength(0) + 1;
+        int lastY = startY + _dataTable.GetLength(0) + 1;
         canvas.Draw("└", startX - 1, lastY);
         int footerX = startX;
-        for (int i = 0; i < DataTable.GetLength(1); i++)
+        for (int i = 0; i < _dataTable.GetLength(1); i++)
         {
             int colWidth = _columnMaxLengths[i] + 2;
             canvas.Draw(new string('─', colWidth), footerX, lastY);
             footerX += colWidth;
-            if (i < DataTable.GetLength(1) - 1)
+            if (i < _dataTable.GetLength(1) - 1)
                 canvas.Draw("┴", footerX, lastY);
             footerX++;
         }
