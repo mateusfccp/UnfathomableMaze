@@ -86,8 +86,6 @@ public class Engine
             var canvas = new Canvas(_width, _height);
             var key = ProcessInput();
 
-            if (key == ConsoleKey.Escape) Stop();
-
             _scene.OnKeyPressed(key);
             _scene.Draw(canvas);
 
