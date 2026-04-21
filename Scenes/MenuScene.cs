@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Drawing;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Models;
@@ -69,10 +70,10 @@ public class MenuScene : IScene
                 switch (_selectedOption)
                 {
                     case 0:
-                        newScene = new MazeScene(new MapGenerator(), false);
+                        newScene = new MazeScene(new MapGenerator(new Size(31, 31)), false);
                         break;
                     case 1:
-                        newScene = new MazeScene(new MapGenerator(), true);
+                        newScene = new MazeScene(new MapGenerator(new Size(41, 41)), true);
                         break;
                     case 2:
                         newScene = new TableScene();
