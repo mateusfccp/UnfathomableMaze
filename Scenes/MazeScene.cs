@@ -34,13 +34,13 @@ public class MazeScene : IScene
         canvas.Clear();
 
         // Score
-        canvas.Draw($"Score: {_score}", 1, 1);
+        canvas.Draw($"Puntaje: {_score}", 1, 1);
         // Steps
-        canvas.Draw($"Steps: {_steps}", 1, 2);
+        canvas.Draw($"Pasos: {_steps}", 1, 2);
         // Return to menu
-        canvas.Draw("Press", 1, 3);
-        canvas.Draw("Esc", 7, 3, new Models.Style(Color.Salmon));
-        canvas.Draw("to return to Menu", 11, 3);
+        canvas.Draw("Presione", 1, 3);
+        canvas.Draw("Esc", 10, 3, new Models.Style(Color.Salmon));
+        canvas.Draw("para volver al Menú", 14, 3);
 
         // The visual map
         for (int i = 0; i < _displayMap.GetLength(0); i++)
@@ -64,10 +64,12 @@ public class MazeScene : IScene
 
     public void OnKeyPressed(ConsoleKey key)
     {
+        ValidateGameState();
+
         switch (key)
         {
             case ConsoleKey.UpArrow:
-                if (!_mazeController.ValidateNorth(_mazeController.TileMap, _player.Y, _player.X))
+                if (!_mazeController.ValidateNorth(_mazeController.TileMap, _player.X, _player.Y))
                 {
                     _player.Y--;
                     _steps++;
@@ -75,7 +77,7 @@ public class MazeScene : IScene
                 else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.RightArrow:
-                if (!_mazeController.ValidateEast(_mazeController.TileMap, _player.Y, _player.X))
+                if (!_mazeController.ValidateEast(_mazeController.TileMap, _player.X, _player.Y))
                 {
                     _player.X++;
                     _steps++;
@@ -83,15 +85,14 @@ public class MazeScene : IScene
                 else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.DownArrow:
-                if (!_mazeController.ValidateSouth(_mazeController.TileMap, _player.Y, _player.X))
-                {
+                if (!_mazeController.ValidateSouth(_mazeController.TileMap, _player.X, _player.Y)) {
                     _player.Y++;
                     _steps++;
                 }
                 else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.LeftArrow:
-                if (!_mazeController.ValidateWest(_mazeController.TileMap, _player.Y, _player.X))
+                if (!_mazeController.ValidateWest(_mazeController.TileMap, _player.X, _player.Y))
                 {
                     _player.X--;
                     _steps++;
@@ -114,7 +115,7 @@ public class MazeScene : IScene
         }
         else if (_death)
         {
-            var newScene = new DeathScene();
+            var newScene = new DeathScene(_score, _steps);
             Engine.Instance?.UpdateScene(newScene);
         }
     }
