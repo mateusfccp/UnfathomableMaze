@@ -1,10 +1,8 @@
 ﻿using System.Drawing;
-using System.Numerics;
 using UnfathomableMaze.Controllers;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnfathomableMaze.Scenes;
 
@@ -26,7 +24,7 @@ public class MazeScene : IScene
         _mazeController = new MazeController(mapGenerator);
         _displayMap = ConvertMap(_mazeController.TileMap);
         _player = new Point(1, 1);
-        _hardMode = hardMode;
+        _hardmode = hardMode;
         _score = score;
         _steps = steps;
     }
