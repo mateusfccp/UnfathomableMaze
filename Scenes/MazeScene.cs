@@ -1,117 +1,159 @@
 ﻿using System.Drawing;
-using UnfathomableMaze.Control;
+using UnfathomableMaze.Controllers;
+using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Services;
 
-namespace UnfathomableMaze.Scenes
+namespace UnfathomableMaze.Scenes;
+
+public class MazeScene : IScene
 {
+    private readonly IMapTilesGenerator _mapGenerator;
+    private readonly MazeController _mazeController;
+    private readonly char[,] _displayMap;
+    private Point _player;
+    private Point _finishFlag;
+    private readonly bool _hardMode;
+    private bool _death;
+    private int _score;
+    private long _steps;
 
-    public class MazeScene : IScene
+    public MazeScene(IMapTilesGenerator mapGenerator, bool hardMode, int score = 0, long steps = 0)
     {
-        private MapGenerator mapGenerator = new MapGenerator();
-        private nMaze maze;
-        private char[,] displayMap;
-        private Point player;
-        private Point finishFlag;
-        private bool hardmode;
-        private bool death;
-        private int score;
-        private long steps;
+        _mapGenerator = mapGenerator;
+        _mazeController = new MazeController(mapGenerator);
+        _displayMap = ConvertMap(_mazeController.TileMap);
+        _player = new Point(1, 1);
+        _hardMode = hardMode;
+        _score = score;
+        _steps = steps;
+    }
 
-        public MazeScene(bool hardmode, int score = 0, long steps = 0)
+    public void Draw(Engine.Canvas canvas)
+    {
+        canvas.Clear();
+
+        // Score
+        canvas.Draw($"Score: {_score}", 1, 1);
+        // Steps
+        canvas.Draw($"Steps: {_steps}", 1, 2);
+        // Return to menu
+        canvas.Draw("Press", 1, 3);
+        canvas.Draw("Esc", 7, 3, new Models.Style(Color.Salmon));
+        canvas.Draw("to return to Menu", 11, 3);
+
+        // The visual map
+        for (int i = 0; i < _displayMap.GetLength(0); i++)
         {
-            maze = new nMaze(mapGenerator);
-            displayMap = maze.ConvertMap();
-            player = new Point(1, 1);
-            this.hardmode = hardmode;
-            this.score = score;
-            this.steps = steps;
+            for (int j = 0; j < _displayMap.GetLength(1); j++)
+            {
+                canvas.Draw(_displayMap[i, j].ToString(), canvas.Width / 2 - _displayMap.GetLength(1) / 2 + j,
+                    canvas.Height / 2 - _displayMap.GetLength(0) / 2 + i);
+            }
         }
 
-        public void Draw(Engine.Canvas canvas)
+        // Finish Flag
+        _finishFlag = new Point(_displayMap.GetLength(1) - 2, _displayMap.GetLength(0) - 2);
+        canvas.Draw("⚿", canvas.Width / 2 - _displayMap.GetLength(1) / 2 + _finishFlag.X,
+            canvas.Height / 2 - _displayMap.GetLength(0) / 2 + _finishFlag.Y, new Models.Style(Color.Gold));
+
+        // Player
+        canvas.Draw("@", canvas.Width / 2 - _displayMap.GetLength(1) / 2 + _player.X,
+            canvas.Height / 2 - _displayMap.GetLength(0) / 2 + _player.Y);
+    }
+
+    public void OnKeyPressed(ConsoleKey key)
+    {
+        switch (key)
         {
-            canvas.Clear();
-            ValidateGameState();
-
-            // Score
-            canvas.Draw($"Score: {score}", 1, 1);
-            // Steps
-            canvas.Draw($"Steps: {steps}", 1, 2);
-            // Return to menu
-            canvas.Draw("Press", 1, 3);
-            canvas.Draw("Esc", 7, 3, new Models.Style(Color.Salmon));
-            canvas.Draw("to return to Menu", 11, 3);
-
-            // The visual map
-            for (int i = 0; i < displayMap.GetLength(0); i++)
-            {
-                for (int j = 0; j < displayMap.GetLength(1); j++)
-                {
-                    canvas.Draw(displayMap[i, j].ToString(), canvas.Width / 2 - displayMap.GetLength(1) / 2 + j, canvas.Height / 2 - displayMap.GetLength(0) / 2 + i);
-                }
-            }
-
-            // Finish Flag
-            finishFlag = new Point(displayMap.GetLength(1) - 2, displayMap.GetLength(0) - 2);
-            canvas.Draw("⚿", canvas.Width / 2 - displayMap.GetLength(1) / 2 + finishFlag.X, canvas.Height / 2 - displayMap.GetLength(0) / 2 + finishFlag.Y, new Models.Style(Color.Gold));
-
-            // Player
-            canvas.Draw("@", canvas.Width / 2 - displayMap.GetLength(1) / 2 + player.X, canvas.Height / 2 - displayMap.GetLength(0) / 2 + player.Y);
-        }
-
-        public void OnKeyPressed(ConsoleKey key)
-        {
-            switch (key)
-            {
-                case ConsoleKey.UpArrow:
-                    steps++;
-                    if (!maze.ValidateNorth(maze.TileMap, player.Y, player.X)) player.Y--;
-                    else if (hardmode) death = true;
-                    break;
-                case ConsoleKey.RightArrow:
-                    steps++;
-                    if (!maze.ValidateEast(maze.TileMap, player.Y, player.X)) player.X++;
-                    else if (hardmode) death = true;
-                    break;
-                case ConsoleKey.DownArrow:
-                    steps++;
-                    if (!maze.ValidateSouth(maze.TileMap, player.Y, player.X)) player.Y++;
-                    else if (hardmode) death = true;
-                    break;
-                case ConsoleKey.LeftArrow:
-                    steps++;
-                    if (!maze.ValidateWest(maze.TileMap, player.Y, player.X)) player.X--;
-                    else if (hardmode) death = true;
-                    break;
-                case ConsoleKey.Escape:
-                    Engine.Instance?.UpdateScene(new MenuScene());
-                    break;
-
-            }
-
-        }
-
-        private void ValidateGameState()
-        {
-            if (player == finishFlag)
-            {
-                score = score + 1;
-                IScene? newScene = null;
-                if (hardmode)
-                {
-                    newScene = new MazeScene(true, score, steps);
-                }
-                else newScene = new MazeScene(false, score, steps);
-                Engine.Instance?.UpdateScene(newScene);
-            }
-
-            if (death)
-            {
-                IScene? newScene = null;
-                newScene = new DeathScene();
-                Engine.Instance?.UpdateScene(newScene);
-            }
+            case ConsoleKey.UpArrow:
+                _steps++;
+                if (!_mazeController.ValidateNorth(_mazeController.TileMap, _player.X, _player.Y)) _player.Y--;
+                else if (_hardMode) _death = true;
+                ValidateGameState();
+                break;
+            case ConsoleKey.RightArrow:
+                _steps++;
+                if (!_mazeController.ValidateEast(_mazeController.TileMap, _player.X, _player.Y)) _player.X++;
+                else if (_hardMode) _death = true;
+                ValidateGameState();
+                break;
+            case ConsoleKey.DownArrow:
+                _steps++;
+                if (!_mazeController.ValidateSouth(_mazeController.TileMap, _player.X, _player.Y)) _player.Y++;
+                else if (_hardMode) _death = true;
+                ValidateGameState();
+                break;
+            case ConsoleKey.LeftArrow:
+                _steps++;
+                if (!_mazeController.ValidateWest(_mazeController.TileMap, _player.X, _player.Y)) _player.X--;
+                else if (_hardMode) _death = true;
+                ValidateGameState();
+                break;
+            case ConsoleKey.Escape:
+                Engine.Instance?.UpdateScene(new MenuScene());
+                break;
         }
     }
-}
 
+    private void ValidateGameState()
+    {
+        if (_player == _finishFlag)
+        {
+            _score = _score + 1;
+            var newScene = new MazeScene(_mapGenerator, _hardMode, _score, _steps);
+            Engine.Instance?.UpdateScene(newScene);
+        }
+        else if (_death)
+        {
+            var newScene = new DeathScene();
+            Engine.Instance?.UpdateScene(newScene);
+        }
+    }
+
+    private char[,] ConvertMap(Tile[,] tileMap)
+    {
+        int width = tileMap.GetLength(0);
+        int height = tileMap.GetLength(1);
+        char[,] charMap = new char[width, height];
+
+        for (int y = 0; y < width; y++)
+        {
+            for (int x = 0; x < height; x++)
+            {
+                if (tileMap[y, x] == Tile.Wall)
+                {
+                    bool north = _mazeController.ValidateNorth(tileMap, x, y);
+                    bool south = _mazeController.ValidateSouth(tileMap, x, y);
+                    bool west = _mazeController.ValidateWest(tileMap, x, y);
+                    bool east = _mazeController.ValidateEast(tileMap, x, y);
+
+                    // Corners
+                    if (south && east && !north && !west) charMap[y, x] = '┌';
+                    else if (south && west && !north && !east) charMap[y, x] = '┐';
+                    else if (north && east && !south && !west) charMap[y, x] = '└';
+                    else if (north && west && !south && !east) charMap[y, x] = '┘';
+
+                    // 3 Way Intersections
+                    else if (west && east && south && !north) charMap[y, x] = '┬';
+                    else if (west && east && north && !south) charMap[y, x] = '┴';
+                    else if (north && south && east && !west) charMap[y, x] = '├';
+                    else if (north && south && west && !east) charMap[y, x] = '┤';
+
+                    // Cross
+                    else if (north && south && west && east) charMap[y, x] = '┼';
+
+                    // Straights
+                    else if (north || south) charMap[y, x] = '│';
+                    else charMap[y, x] = '─';
+                }
+                else
+                {
+                    charMap[y, x] = ' ';
+                }
+            }
+        }
+
+        return charMap;
+    }
+}

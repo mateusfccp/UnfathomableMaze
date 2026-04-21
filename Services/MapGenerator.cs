@@ -17,8 +17,8 @@ namespace UnfathomableMaze.Services;
 /// </summary>
 public class MapGenerator : IMapTilesGenerator
 {
-    private int Width = 41; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
-    private int Height = 41;
+    private readonly int _width; // IMPORTANT: The size of the maze must ALWAYS be made by 2 odd numbers
+    private readonly int _height;
 
     /// <summary>
     /// DETAIL: The number 31 means that the maze is composed by 29 real tiles.
@@ -27,26 +27,27 @@ public class MapGenerator : IMapTilesGenerator
     ///</summary>
     private readonly Random _random = new();
 
-    public MapGenerator() {
-        int rand1 = _random.Next(20, 50);
-        int rand2 = _random.Next(20, 50);
+    public MapGenerator()
+    {
+        int rand1 = _random.Next(21, 50);
+        int rand2 = _random.Next(21, 50);
 
         if (rand1 % 2 == 0) rand1++;
         if (rand2 % 2 == 0) rand2++;
 
-        Width = rand1;
-        Height = rand2;
+        _width = rand1;
+        _height = rand2;
     }
 
     public Tile[,] Generate() // Function that initializes and generates the maze
     {
-        Debug.Assert(Width % 2 == 1 && Height % 2 == 1, "The size of the maze must be made by 2 odd numbers.");
+        Debug.Assert(_width % 2 == 1 && _height % 2 == 1, "The size of the maze must be made by 2 odd numbers.");
 
-        var map = new Tile[Width, Height]; // Creation of the matrix
+        var map = new Tile[_width, _height]; // Creation of the matrix
 
-        for (var x = 0; x < Width; x++) // Fully initialized with walls
+        for (var x = 0; x < _width; x++) // Fully initialized with walls
         {
-            for (var y = 0; y < Height; y++)
+            for (var y = 0; y < _height; y++)
             {
                 map[x, y] = Tile.Wall;
             }
@@ -84,6 +85,7 @@ public class MapGenerator : IMapTilesGenerator
                 stack.Pop(); // If no neighbors are left, the stack goes backwards and keeps checking for neighbors.
             }
         }
+
         AddLoops(map, 0.02); // Turns the simple maze into a braid maze (adds loops)
 
         return map;
@@ -97,23 +99,24 @@ public class MapGenerator : IMapTilesGenerator
         if (x > 2 && map[x - 2, y] == Tile.Wall)
             // Checks for the limit of the matrix at the left and neighbors at the left of X
             neighbors.Add(new Point(x - 2, y));
-        if (x < Width - 2 && map[x + 2, y] == Tile.Wall)
+        if (x < _width - 2 && map[x + 2, y] == Tile.Wall)
             // Checks for the limit of the matrix at the right and neighbors at the right of X
             neighbors.Add(new Point(x + 2, y));
         if (y > 2 && map[x, y - 2] == Tile.Wall)
             // Checks for the limit of the matrix at the top and neighbors at the top of Y
             neighbors.Add(new Point(x, y - 2));
-        if (y < Height - 2 && map[x, y + 2] == Tile.Wall)
+        if (y < _height - 2 && map[x, y + 2] == Tile.Wall)
             // Checks for the limit of the matrix at the bot and neighbors at the bot of Y
             neighbors.Add(new Point(x, y + 2));
 
         return neighbors;
     }
+
     private void AddLoops(Tile[,] map, double probability)
     {
-        for (int x = 1; x < Width - 1; x++)
+        for (int x = 1; x < _width - 1; x++)
         {
-            for (int y = 1; y < Height - 1; y++)
+            for (int y = 1; y < _height - 1; y++)
             {
                 if (map[x, y] == Tile.Wall)
                 {

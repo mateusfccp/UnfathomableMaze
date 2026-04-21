@@ -69,10 +69,10 @@ public class MenuScene : IScene
                 switch (_selectedOption)
                 {
                     case 0:
-                        newScene = new MazeScene(false);
+                        newScene = new MazeScene(new MapGenerator(), false);
                         break;
                     case 1:
-                        newScene = new MazeScene(true);
+                        newScene = new MazeScene(new MapGenerator(), true);
                         break;
                     case 2:
                         newScene = new TableScene();
