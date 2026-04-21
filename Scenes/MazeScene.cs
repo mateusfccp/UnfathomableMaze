@@ -34,13 +34,13 @@ namespace UnfathomableMaze.Scenes
             ValidateGameState();
 
             // Score
-            canvas.Draw($"Score: {score}", 1, 1);
+            canvas.Draw($"Puntaje: {score}", 1, 1);
             // Steps
-            canvas.Draw($"Steps: {steps}", 1, 2);
+            canvas.Draw($"Pasos: {steps}", 1, 2);
             // Return to menu
-            canvas.Draw("Press", 1, 3);
+            canvas.Draw("Presione", 1, 3);
             canvas.Draw("Esc", 7, 3, new Models.Style(Color.Salmon));
-            canvas.Draw("to return to Menu", 11, 3);
+            canvas.Draw("para retornar al Menú", 11, 3);
 
             // The visual map
             for (int i = 0; i < displayMap.GetLength(0); i++)
@@ -64,23 +64,35 @@ namespace UnfathomableMaze.Scenes
             switch (key)
             {
                 case ConsoleKey.UpArrow:
-                    steps++;
-                    if (!maze.ValidateNorth(maze.TileMap, player.Y, player.X)) player.Y--;
+                    if (!maze.ValidateNorth(maze.TileMap, player.Y, player.X))
+                    {
+                        player.Y--;
+                        steps++;
+                    }
                     else if (hardmode) death = true;
                     break;
                 case ConsoleKey.RightArrow:
-                    steps++;
-                    if (!maze.ValidateEast(maze.TileMap, player.Y, player.X)) player.X++;
+                    if (!maze.ValidateEast(maze.TileMap, player.Y, player.X))
+                    {
+                        player.X++;
+                        steps++;
+                    }
                     else if (hardmode) death = true;
                     break;
                 case ConsoleKey.DownArrow:
-                    steps++;
-                    if (!maze.ValidateSouth(maze.TileMap, player.Y, player.X)) player.Y++;
+                    if (!maze.ValidateSouth(maze.TileMap, player.Y, player.X))
+                    {
+                        player.Y++;
+                        steps++;
+                    }
                     else if (hardmode) death = true;
                     break;
                 case ConsoleKey.LeftArrow:
-                    steps++;
-                    if (!maze.ValidateWest(maze.TileMap, player.Y, player.X)) player.X--;
+                    if (!maze.ValidateWest(maze.TileMap, player.Y, player.X))
+                    {
+                        player.X--;
+                        steps++;
+                    }
                     else if (hardmode) death = true;
                     break;
                 case ConsoleKey.Escape:

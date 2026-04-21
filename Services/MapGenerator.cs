@@ -27,16 +27,6 @@ public class MapGenerator : IMapTilesGenerator
     ///</summary>
     private readonly Random _random = new();
 
-    public MapGenerator() {
-        int rand1 = _random.Next(20, 50);
-        int rand2 = _random.Next(20, 50);
-
-        if (rand1 % 2 == 0) rand1++;
-        if (rand2 % 2 == 0) rand2++;
-
-        Width = rand1;
-        Height = rand2;
-    }
 
     public Tile[,] Generate() // Function that initializes and generates the maze
     {
