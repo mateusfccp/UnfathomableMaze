@@ -1,8 +1,10 @@
 ﻿using System.Drawing;
+using System.Numerics;
 using UnfathomableMaze.Controllers;
 using UnfathomableMaze.Enums;
 using UnfathomableMaze.Interfaces;
 using UnfathomableMaze.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnfathomableMaze.Scenes;
 
@@ -13,7 +15,7 @@ public class MazeScene : IScene
     private readonly char[,] _displayMap;
     private Point _player;
     private Point _finishFlag;
-    private readonly bool _hardMode;
+    private readonly bool _hardmode;
     private bool _death;
     private int _score;
     private long _steps;
@@ -67,28 +69,36 @@ public class MazeScene : IScene
         switch (key)
         {
             case ConsoleKey.UpArrow:
-                _steps++;
-                if (!_mazeController.ValidateNorth(_mazeController.TileMap, _player.X, _player.Y)) _player.Y--;
-                else if (_hardMode) _death = true;
-                ValidateGameState();
+                if (!_mazeController.ValidateNorth(_mazeController.TileMap, _player.Y, _player.X))
+                {
+                    _player.Y--;
+                    _steps++;
+                }
+                else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.RightArrow:
-                _steps++;
-                if (!_mazeController.ValidateEast(_mazeController.TileMap, _player.X, _player.Y)) _player.X++;
-                else if (_hardMode) _death = true;
-                ValidateGameState();
+                if (!_mazeController.ValidateEast(_mazeController.TileMap, _player.Y, _player.X))
+                {
+                    _player.X++;
+                    _steps++;
+                }
+                else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.DownArrow:
-                _steps++;
-                if (!_mazeController.ValidateSouth(_mazeController.TileMap, _player.X, _player.Y)) _player.Y++;
-                else if (_hardMode) _death = true;
-                ValidateGameState();
+                if (!_mazeController.ValidateSouth(_mazeController.TileMap, _player.Y, _player.X))
+                {
+                    _player.Y++;
+                    _steps++;
+                }
+                else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.LeftArrow:
-                _steps++;
-                if (!_mazeController.ValidateWest(_mazeController.TileMap, _player.X, _player.Y)) _player.X--;
-                else if (_hardMode) _death = true;
-                ValidateGameState();
+                if (!_mazeController.ValidateWest(_mazeController.TileMap, _player.Y, _player.X))
+                {
+                    _player.X--;
+                    _steps++;
+                }
+                else if (_hardmode) _death = true;
                 break;
             case ConsoleKey.Escape:
                 Engine.Instance?.UpdateScene(new MenuScene());
@@ -101,7 +111,7 @@ public class MazeScene : IScene
         if (_player == _finishFlag)
         {
             _score = _score + 1;
-            var newScene = new MazeScene(_mapGenerator, _hardMode, _score, _steps);
+            var newScene = new MazeScene(_mapGenerator, _hardmode, _score, _steps);
             Engine.Instance?.UpdateScene(newScene);
         }
         else if (_death)
