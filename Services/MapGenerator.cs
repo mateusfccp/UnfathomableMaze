@@ -50,8 +50,10 @@ public class MapGenerator : IMapTilesGenerator
         }
 
         var stack = new Stack<Point>(); // Stack of positions the "ant" carved into the maze
-        int startX = 1; // Start position of the player in the maze
-        int startY = 1; // Can be changed but MUST ALWAYS be composed by two odd numbers.
+        int startX = (_size.Width / 2); // Start position of the ant in the maze
+        int startY = (_size.Height / 2); // Can be changed but MUST ALWAYS be composed by two odd numbers.
+        if (startX % 2 == 0) startX++;
+        if (startY % 2 == 0) startY++;
 
         map[startX, startY] = Tile.Path; // Start position is turned into a path and pushed into the stack
 
