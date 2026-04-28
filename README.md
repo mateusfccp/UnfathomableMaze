@@ -5,6 +5,12 @@ Unfathomable Maze is a console-based maze game written in C# and .NET. It featur
 custom rendering engine for rich console output, and multiple game scenes. Navigate through an ever-changing labyrinth,
 track your score, and challenge yourself in different modes.
 
+# **IMPORTANT**
+- Before running the program **make sure** to download the monospaced font and apply it to the CLI you are using. This ensures that the maze and tables look good.
+- The monospaced font can be found in the files of the repository as "UnfathomableFont.ttf" or you can also download it [**HERE**](https://www.mediafire.com/file/am551b3hgncdymn/UnfathomableFont.ttf/file).
+- After downloading it just go to your CLI config and select the font u just downloaded.
+- You can also use other fonts of your liking as long as they are monospaced.
+
 ## Features
 
 * **Procedurally Generated Mazes**: Every maze is unique, generated using a randomized depth-first search algorithm.
